@@ -2,11 +2,18 @@ plugins {
     id 'com.android.library'
     id("maven-publish")
 }
+
+group = 'com.koai-dev'
+version = '1.0.1'
+
 android {
     compileSdk = 34
 
     defaultConfig {
         minSdkVersion 21
+        aarMetadata {
+            minCompileSdk = 29
+        }
     }
     namespace 'com.github.barteksc.pdfviewer'
 
@@ -20,17 +27,17 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     buildFeatures {
         buildConfig = true
     }
+
     publishing {
-        singleVariant("release") {
+        singleVariant('release') {
             withSourcesJar()
-            withJavadocJar()
         }
     }
 }
@@ -42,12 +49,13 @@ dependencies {
 afterEvaluate {
     publishing {
         publications {
-            register(MavenPublication) {
-                groupId = "com.koai"
-                artifactId = "pdfviewer"
-                version = "1.0.0"
+            release(MavenPublication) {
+                groupId = 'com.koai-dev'
+                artifactId = 'pdfviewer'
+                version = '1.0.1'
+
                 afterEvaluate {
-                    components
+                    from components.release
                 }
             }
         }
