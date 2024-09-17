@@ -1,45 +1,72 @@
-apply plugin: 'com.android.library'
-
-ext {
-    bintrayRepo = 'maven'
-    bintrayName = 'android-pdf-viewer'
-
-    publishedGroupId = 'com.github.barteksc'
-    libraryName = 'AndroidPdfViewer'
-    artifact = 'android-pdf-viewer'
-
-    libraryDescription = 'Android view for displaying PDFs rendered with PdfiumAndroid'
-
-    siteUrl = 'https://github.com/barteksc/AndroidPdfViewer'
-    gitUrl = 'https://github.com/barteksc/AndroidPdfViewer.git'
-
-    libraryVersion = '2.8.2'
-
-    developerId = 'barteksc'
-    developerName = 'Bartosz Schiller'
-    developerEmail = 'barteksch@boo.pl'
-
-    licenseName = 'The Apache Software License, Version 2.0'
-    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-    allLicenses = ["Apache-2.0"]
+plugins {
+    id 'com.android.library'
+    id("maven-publish")
 }
-
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.3'
+    compileSdk = 34
 
     defaultConfig {
-        minSdkVersion 11
-        targetSdkVersion 25
-        versionCode 1
-        versionName "2.8.2"
+        minSdkVersion 21
+    }
+    namespace 'com.github.barteksc.pdfviewer'
+
+    buildTypes {
+        release {
+            minifyEnabled  false
+            proguardFiles(
+                    getDefaultProguardFile("proguard-android-optimize.txt"),
+                    "proguard-rules.pro",
+            )
+        }
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
+    buildFeatures {
+        buildConfig = true
+    }
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
 }
 
 dependencies {
-    compile 'com.github.barteksc:pdfium-android:1.7.1'
+    api("com.github.barteksc:pdfium-android:1.7.1")
 }
 
-apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
-apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
+afterEvaluate {
+    publishing {
+        publications {
+            register(MavenPublication) {
+                groupId = "com.koai"
+                artifactId = "pdfviewer"
+                version = "1.0.0"
+                afterEvaluate {
+                    components
+                }
+            }
+        }
+    }
+}
+
+task createReleaseTag {
+    doLast {
+        def tagName = "1.0.0"
+        try {
+            exec {
+                commandLine("git", "tag", "-a", tagName, "-m", "Release tag $tagName")
+            }
+
+            exec {
+                commandLine("git", "push", "origin", tagName)
+            }
+        } catch (e) {
+            println(e.toString())
+        }
+    }
+}
