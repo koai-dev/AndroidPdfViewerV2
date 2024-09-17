@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.koai-dev'
-version = '2.0.2'
+version = '2.0.3'
 
 android {
     compileSdk = 34
@@ -68,16 +68,17 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
 }
+afterEvaluate{
+    publishing {
+        publications {
+            release(MavenPublication) {
+                groupId = 'com.koai-dev'
+                artifactId = 'pdfviewer'
+                version = '2.0.3'
 
-publishing {
-    publications {
-        release(MavenPublication) {
-            groupId = 'com.koai-dev'
-            artifactId = 'pdfviewer'
-            version = '2.0.2'
-
-            afterEvaluate {
-                from components.release
+                afterEvaluate {
+                    from components.release
+                }
             }
         }
     }
@@ -85,7 +86,7 @@ publishing {
 
 task createReleaseTag {
     doLast {
-        def tagName = "2.0.2"
+        def tagName = "2.0.3"
         try {
             exec {
                 commandLine("git", "tag", "-a", tagName, "-m", "Release tag $tagName")
@@ -98,14 +99,4 @@ task createReleaseTag {
             println(e.toString())
         }
     }
-}
-
-tasks.whenTaskAdded { task ->
-    if (task.name == 'compileDebugJavaWithJavac') {
-        task.enabled = false
-    }
-    if (task.name == 'compileReleaseJavaWithJavac') {
-        task.enabled = false
-    }
-
 }
