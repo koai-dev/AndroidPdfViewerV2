@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'com.koai-dev'
-version = '1.0.1'
+version = '2.0.0'
 
 android {
     compileSdk = 34
@@ -19,7 +19,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled  false
+            minifyEnabled false
             proguardFiles(
                     getDefaultProguardFile("proguard-android-optimize.txt"),
                     "proguard-rules.pro",
@@ -46,17 +46,15 @@ dependencies {
     api("com.github.barteksc:pdfium-android:1.7.1")
 }
 
-afterEvaluate {
-    publishing {
-        publications {
-            release(MavenPublication) {
-                groupId = 'com.koai-dev'
-                artifactId = 'pdfviewer'
-                version = '1.0.1'
+publishing {
+    publications {
+        release(MavenPublication) {
+            groupId = 'com.koai-dev'
+            artifactId = 'pdfviewer'
+            version = '2.0.0'
 
-                afterEvaluate {
-                    from components.release
-                }
+            afterEvaluate {
+                from components.release
             }
         }
     }
@@ -64,7 +62,7 @@ afterEvaluate {
 
 task createReleaseTag {
     doLast {
-        def tagName = "1.0.0"
+        def tagName = "2.0.0"
         try {
             exec {
                 commandLine("git", "tag", "-a", tagName, "-m", "Release tag $tagName")
