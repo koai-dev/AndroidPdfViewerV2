@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.koai-dev'
-version = '2.0.5'
+version = '2.0.6'
 
 android {
     compileSdk = 34
@@ -74,7 +74,7 @@ afterEvaluate{
             release(MavenPublication) {
                 groupId = 'com.koai-dev'
                 artifactId = 'pdfviewer'
-                version = '2.0.5'
+                version = '2.0.6'
 
                 afterEvaluate {
                     from components.release
@@ -86,7 +86,7 @@ afterEvaluate{
 
 task createReleaseTag {
     doLast {
-        def tagName = "2.0.5"
+        def tagName = "2.0.6"
         try {
             exec {
                 commandLine("git", "tag", "-a", tagName, "-m", "Release tag $tagName")
